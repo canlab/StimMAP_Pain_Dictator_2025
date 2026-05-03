@@ -1,8 +1,14 @@
 load('Data_study2.mat')
 font_size = 20;
 
-glme_data_study2 = fitlme(Table_data_study2, 'Rate ~ 1 + Runs_mean_centered * Trials_mean_centered + Stimulus_Intensity *  Intensity_Offer_mean_centered * Monetary_Offer_mean_centered + (1 + Runs_mean_centered * Trials_mean_centered + Intensity_Offer_mean_centered * Monetary_Offer_mean_centered * Stimulus_Intensity | Sub)','StartMethod','random');
-anova_glme_data_study2 = anova(glme_data_study2,'dfmethod','satterthwaite');
+
+
+simple_model_study2 = fitlme(Table_data_study2, 'Rate ~ 1 + Runs_mean_centered + Trials_mean_centered + Biological_Sex + Stimulus_Intensity *  Intensity_Offer_mean_centered * Monetary_Offer_mean_centered + (1 +  Intensity_Offer_mean_centered + Monetary_Offer_mean_centered + Stimulus_Intensity | Sub)','StartMethod','random');
+anova_simple_model_study2 = anova(simple_model_study2,'dfmethod','satterthwaite');
+
+
+complex_model_study2 = fitlme(Table_data_study2, 'Rate ~ 1 + Runs_mean_centered * Trials_mean_centered + Biological_Sex + Stimulus_Intensity *  Intensity_Offer_mean_centered * Monetary_Offer_mean_centered + (1 + Runs_mean_centered * Trials_mean_centered + Intensity_Offer_mean_centered * Monetary_Offer_mean_centered * Stimulus_Intensity | Sub)','StartMethod','random');
+anova_complex_model_study2 = anova(complex_model_study2,'dfmethod','satterthwaite');
 
 numericTable = Table_data_study2(:, varfun(@isnumeric, Table_data_study2, 'OutputFormat', 'uniform'));
 data_study2 = table2array(numericTable);
@@ -64,25 +70,26 @@ X_study2{1,1} = Out_presentation_study2(:,1);
 X_study2{1,2} = Out_presentation_study2(:,2);
 X_study2{1,3} = Out_presentation_study2(:,3);
 
-h = daviolinplot(X_study2, 'outsymbol','k+','violin', 'half2', 'violinwidth', 1, 'boxcolors','same',...
+h = daviolinplot(X_study2, 'outsymbol','k+','violin', 'half2', 'violinwidth', 3, 'boxcolors','same',...
     'box' ,2, 'boxcolors','same','boxalpha', 0.6, 'scatter',1,'scattersize',30,'scatteralpha' , 0.4,'jitter',1 ,'xtlabels', condition_names, 'outliers',0);
+xlim([0.3 3.2])
 ylabel('Effect on Pain Sensation')
-ylim([-20  90])
+ylim([-20  70])
 
 % Remove default x-tick labels
 xticklabels('');
 title('Study 2')
 
 % Manually add closer labels
-text(1, -23, {'Intensity Offer'}, 'HorizontalAlignment', 'center','FontSize',font_size);
-text(2, -23, {'Monetary Offer'}, 'HorizontalAlignment', 'center','FontSize',font_size);
+text(1, -23, {'APL'}, 'HorizontalAlignment', 'center','FontSize',font_size);
+text(2, -23, {'DP'}, 'HorizontalAlignment', 'center','FontSize',font_size);
 text(3, -23, {'Stimulus Intensity'}, 'HorizontalAlignment', 'center','FontSize',font_size);
 set(gca, 'FontSize', font_size,'FontName', 'Helvetica-Narrow')
-set(gcf, 'Units', 'inches', 'Position', [1, 1, 9 7]);
+set(gcf, 'Units', 'inches', 'Position', [1, 1, 8 6]);
 hold on
 yline(0, ":", 'LineWidth', 0.1);
-text(1, -29, {'High vs. Low'}, 'HorizontalAlignment', 'center','FontSize',font_size);
-text(2, -29, {'High vs. Low'}, 'HorizontalAlignment', 'center','FontSize',font_size);
-text(3, -29, {'High vs. Low'}, 'HorizontalAlignment', 'center','FontSize',font_size);
+text(1, -29, {'High vs. Low'}, 'HorizontalAlignment', 'center','FontSize',font_size-5);
+text(2, -29, {'High vs. Low'}, 'HorizontalAlignment', 'center','FontSize',font_size-5);
+text(3, -29, {'High vs. Low'}, 'HorizontalAlignment', 'center','FontSize',font_size-5);
 
 
